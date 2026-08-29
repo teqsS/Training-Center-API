@@ -14,3 +14,12 @@ from app.models.student import (
     StudentsOrm,
 )
 
+__all__ = [
+    "Base",
+    "CourseLevel",
+    "CoursesOrm",
+    "EnrollmentsOrm",
+    "Status",
+    "StudentSkill",
+    "StudentsOrm",
+]
