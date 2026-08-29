@@ -1,4 +1,12 @@
-from app.repositories.student_repository import *
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.repositories.student_repository import (
+    insert_student,
+    select_student_by_id,
+    select_students,
+    select_students_by_course,
+    update_student,
+)
 
 
 async def service_get_students(

@@ -1,10 +1,22 @@
 from fastapi import APIRouter
 
 from app.dependencies.database import SessionDep
-from app.schemas.course import *
-from app.schemas.student import *
-from app.services.course_service import *
-from app.services.student_service import *
+from app.schemas.course import (
+    CourseAddDTO,
+    CourseChangeDTO,
+    CourseResponseDTO,
+)
+from app.schemas.student import (
+    StudentResponseDTO,
+)
+from app.services.course_service import (
+    service_cancel_course,
+    service_get_course_by_id,
+    service_get_courses,
+    service_insert_course,
+    service_update_course,
+)
+from app.services.student_service import service_get_students_by_course
 
 router = APIRouter(
     prefix="/courses",

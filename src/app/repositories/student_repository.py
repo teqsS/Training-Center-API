@@ -1,7 +1,11 @@
 from sqlalchemy import and_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models import *
+from app.models import (
+    CoursesOrm,
+    EnrollmentsOrm,
+    StudentsOrm,
+)
 
 
 async def select_students(
