@@ -3,7 +3,15 @@ from __future__ import annotations
 import enum
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ARRAY, CheckConstraint, Enum, String, UniqueConstraint, text
+from sqlalchemy import (
+    ARRAY,
+    CheckConstraint,
+    Enum,
+    String,
+    UniqueConstraint,
+    text,
+    true,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
@@ -14,7 +22,6 @@ from app.models.base import Base, intpk
 
 
 class StudentSkill(str, enum.Enum):
-
     python = "python"
     rust = "rust"
     c = "c"
@@ -27,6 +34,7 @@ class StudentSkill(str, enum.Enum):
     sqlalchemy = "sqlalchemy"
     redis = "redis"
     kubernetes = "kubernetes"
+
 
 student_skill_enum = Enum(
     StudentSkill,
@@ -47,11 +55,13 @@ class StudentsOrm(Base):
         default=list,
         server_default=text("'{}'::student_skill[]"),
     )
-    is_active: Mapped[bool] = True
-
-    enrollments: Mapped[list[EnrollmentsOrm]] = relationship(
-        back_populates="student"
+    is_active: Mapped[bool] = mapped_column(
+        default=True,
+        server_default=true(),
+        nullable=False,
     )
+
+    enrollments: Mapped[list[EnrollmentsOrm]] = relationship(back_populates="student")
     courses: Mapped[list[CoursesOrm]] = relationship(
         secondary="enrollments",
         back_populates="students",
@@ -70,5 +80,5 @@ class StudentsOrm(Base):
         UniqueConstraint(
             "email",
             name="uq_check_email",
-        )
+        ),
     )
