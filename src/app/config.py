@@ -18,6 +18,3 @@ class Settings(BaseSettings):
         case_sensitive=True,
         extra="forbid",
     )
-
-
-settings = Settings()

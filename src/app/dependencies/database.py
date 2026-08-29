@@ -1,14 +1,19 @@
 from collections.abc import AsyncGenerator
-from typing import Annotated
+from typing import Annotated, cast
 
-from fastapi import Depends
+from fastapi import Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database import async_session_factory
+from app.database import SessionFactory
 
 
-async def get_session() -> AsyncGenerator[AsyncSession]:
-    async with async_session_factory() as session:
+async def get_session(request: Request) -> AsyncGenerator[AsyncSession]:
+    session_factory = cast(
+        SessionFactory,
+        request.app.state.session_factory,
+    )
+
+    async with session_factory() as session:
         try:
             yield session
         except Exception:
