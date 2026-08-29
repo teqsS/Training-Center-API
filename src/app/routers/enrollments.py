@@ -1,8 +1,14 @@
 from fastapi import APIRouter
 
 from app.dependencies.database import SessionDep
-from app.schemas.enrollment import *
-from app.services.enrollment_service import *
+from app.schemas.enrollment import (
+    EnrollmentAddDTO,
+)
+from app.services.enrollment_service import (
+    service_cancel_enrollment,
+    service_complete_enrollment,
+    service_make_enrollment,
+)
 
 router = APIRouter(
     prefix="/enrollments",

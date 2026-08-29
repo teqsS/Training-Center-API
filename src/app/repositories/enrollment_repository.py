@@ -1,7 +1,9 @@
 from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models import *
+from app.models import (
+    EnrollmentsOrm,
+)
 
 
 async def insert_enrollment(

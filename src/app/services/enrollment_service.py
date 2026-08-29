@@ -1,4 +1,9 @@
-from app.repositories.enrollment_repository import *
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.repositories.enrollment_repository import (
+    insert_enrollment,
+    update_enrollment,
+)
 
 
 async def service_make_enrollment(

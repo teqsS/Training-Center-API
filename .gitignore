@@ -5,9 +5,12 @@ build/
 dist/
 wheels/
 *.egg-info
-.env
-test_files/
 .ruff_cache/
+.mypy_cache/
 
 # Virtual environments
 .venv
+
+# Dev files
+.env
+test_files/
