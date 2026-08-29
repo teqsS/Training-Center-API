@@ -23,6 +23,7 @@ router = APIRouter(
     tags=["Courses"],
 )
 
+
 @router.get(
     "",
     response_model=list[CourseResponseDTO],
@@ -33,11 +34,10 @@ async def get_courses(
     session: SessionDep,
 ):
 
-    return (
-        await service_get_courses(
-            session=session,
-        )
+    return await service_get_courses(
+        session=session,
     )
+
 
 @router.get(
     "/{course_id}",
@@ -50,11 +50,9 @@ async def get_course_by_id(
     course_id: int,
 ):
 
-    return (
-        await service_get_course_by_id(
-            session=session,
-            course_id=course_id,
-        )
+    return await service_get_course_by_id(
+        session=session,
+        course_id=course_id,
     )
 
 
@@ -69,12 +67,11 @@ async def get_students_by_course(
     course_id: int,
 ):
 
-    return (
-        await service_get_students_by_course(
-            session=session,
-            course_id=course_id,
-        )
+    return await service_get_students_by_course(
+        session=session,
+        course_id=course_id,
     )
+
 
 @router.post(
     "/",
@@ -87,12 +84,11 @@ async def add_course(
     course: CourseAddDTO,
 ):
 
-    return (
-        await service_insert_course(
-            session=session,
-            values=course.model_dump(),
-        )
+    return await service_insert_course(
+        session=session,
+        values=course.model_dump(),
     )
+
 
 @router.patch(
     "/{course_id}",
@@ -107,13 +103,12 @@ async def update_course(
 
     values = course.model_dump(exclude_unset=True)
 
-    return (
-        await service_update_course(
-            session=session,
-            course_id=course_id,
-            values=values,
-        )
+    return await service_update_course(
+        session=session,
+        course_id=course_id,
+        values=values,
     )
+
 
 @router.delete(
     "/{course_id}",
@@ -125,10 +120,7 @@ async def cancel_course(
     course_id: int,
 ):
 
-    return (
-        await service_cancel_course(
-            session=session,
-            course_id=course_id,
-        )
+    return await service_cancel_course(
+        session=session,
+        course_id=course_id,
     )
-

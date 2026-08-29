@@ -19,6 +19,7 @@ async def service_get_students(
 
     return students
 
+
 async def service_get_student_by_id(
     session: AsyncSession,
     student_id: int,
@@ -29,12 +30,10 @@ async def service_get_student_by_id(
         student_id=student_id,
     )
 
-    return student 
+    return student
 
-async def service_get_students_by_course(
-    session: AsyncSession,
-    course_id: int
-):
+
+async def service_get_students_by_course(session: AsyncSession, course_id: int):
 
     students = await select_students_by_course(
         session=session,
@@ -42,6 +41,7 @@ async def service_get_students_by_course(
     )
 
     return students
+
 
 async def service_insert_student(
     session: AsyncSession,
@@ -56,6 +56,7 @@ async def service_insert_student(
     await session.commit()
 
     return result
+
 
 async def service_update_student(
     session: AsyncSession,
@@ -73,6 +74,7 @@ async def service_update_student(
 
     return result
 
+
 async def service_delete_student(
     session: AsyncSession,
     student_id: int,
@@ -87,6 +89,3 @@ async def service_delete_student(
     await session.commit()
 
     return result
-
-
-

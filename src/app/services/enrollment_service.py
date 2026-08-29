@@ -9,21 +9,22 @@ from app.repositories.enrollment_repository import (
 async def service_make_enrollment(
     session: AsyncSession,
     values: dict[str, object],
-):    
+):
 
     enrollment = await insert_enrollment(
         session=session,
         values=values,
-)
+    )
 
     await session.commit()
 
     return enrollment
 
+
 async def service_complete_enrollment(
     session: AsyncSession,
     enrollment_id: int,
-):  
+):
 
     enrollment = await update_enrollment(
         session=session,
@@ -35,11 +36,12 @@ async def service_complete_enrollment(
 
     return enrollment
 
+
 async def service_cancel_enrollment(
     session: AsyncSession,
     enrollment_id: int,
 ):
-    
+
     enrollment = await update_enrollment(
         session=session,
         enrollment_id=enrollment_id,
@@ -49,5 +51,3 @@ async def service_cancel_enrollment(
     await session.commit()
 
     return enrollment
-
-

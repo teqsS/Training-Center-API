@@ -12,11 +12,12 @@ class StudentAddDTO(BaseModel):
     skills: list[StudentSkill] = Field(default_factory=list)
     is_active: bool = Field(default=True)
 
+
 class StudentResponseDTO(StudentAddDTO):
     model_config = ConfigDict(extra="forbid")
 
     id: int
-    
+
 
 class StudentUpdateDTO(BaseModel):
     model_config = ConfigDict(extra="forbid")

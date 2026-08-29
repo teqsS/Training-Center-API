@@ -14,7 +14,6 @@ from app.models.base import Base, created_at, intpk, updated_at
 
 
 class Status(enum.Enum):
-
     active = "active"
     cancelled = "cancelled"
     completed = "completed"
@@ -24,7 +23,9 @@ class EnrollmentsOrm(Base):
     __tablename__ = "enrollments"
 
     id: Mapped[intpk]
-    student_id: Mapped[int] = mapped_column(ForeignKey("students.id", ondelete="CASCADE"))
+    student_id: Mapped[int] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE")
+    )
     course_id: Mapped[int] = mapped_column(ForeignKey("courses.id", ondelete="CASCADE"))
     status: Mapped[Status]
     created_at: Mapped[created_at]

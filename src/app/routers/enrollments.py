@@ -15,22 +15,19 @@ router = APIRouter(
     tags=["Enrollments"],
 )
 
+
 @router.post(
     "/",
     status_code=200,
     summary="Make enrollment",
 )
-async def make_enrollment(
-    session: SessionDep,
-    enrollment: EnrollmentAddDTO
-):
+async def make_enrollment(session: SessionDep, enrollment: EnrollmentAddDTO):
 
-    return (
-        await service_make_enrollment(
-            session=session,
-            values=enrollment.model_dump(),
-        )
+    return await service_make_enrollment(
+        session=session,
+        values=enrollment.model_dump(),
     )
+
 
 @router.patch(
     "/{enrollment_id}/complete",
@@ -42,12 +39,11 @@ async def complete_enrollement(
     enrollment_id: int,
 ):
 
-    return (
-        await service_complete_enrollment(
-            session=session,
-            enrollment_id=enrollment_id,
-        )
+    return await service_complete_enrollment(
+        session=session,
+        enrollment_id=enrollment_id,
     )
+
 
 @router.delete(
     "/{enrollment_id}",
@@ -59,9 +55,7 @@ async def cancel_enrollment(
     enrollment_id: int,
 ):
 
-    return (
-        await service_cancel_enrollment(
-            session=session,
-            enrollment_id=enrollment_id,
-        )
+    return await service_cancel_enrollment(
+        session=session,
+        enrollment_id=enrollment_id,
     )

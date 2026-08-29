@@ -10,7 +10,7 @@ async def insert_enrollment(
     session: AsyncSession,
     values: dict[str, object],
 ):
-    
+
     enrollment = EnrollmentsOrm(**values)
 
     session.add(enrollment)
@@ -18,12 +18,13 @@ async def insert_enrollment(
 
     return enrollment
 
+
 async def update_enrollment(
     session: AsyncSession,
     enrollment_id: int,
     values: dict[str, object],
 ):
-    
+
     stmt = (
         update(EnrollmentsOrm)
         .filter(EnrollmentsOrm.id == enrollment_id)
@@ -34,4 +35,3 @@ async def update_enrollment(
     result = await session.execute(stmt)
 
     return result.scalar_one_or_none()
-
