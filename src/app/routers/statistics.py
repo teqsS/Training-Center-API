@@ -4,4 +4,3 @@ router = APIRouter(
     prefix="/statistics",
     tags=["Statistics"],
 )
-

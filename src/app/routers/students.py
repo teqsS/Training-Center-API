@@ -25,6 +25,7 @@ router = APIRouter(
     tags=["Students"],
 )
 
+
 @router.get(
     "",
     response_model=list[StudentResponseDTO],
@@ -35,11 +36,10 @@ async def get_students(
     session: SessionDep,
 ):
 
-    return (
-        await service_get_students(
-            session=session,
-        )
+    return await service_get_students(
+        session=session,
     )
+
 
 @router.get(
     "/{student_id}",
@@ -52,30 +52,28 @@ async def get_student_by_id(
     student_id: int,
 ):
 
-    return (
-        await service_get_student_by_id(
-            session=session,
-            student_id=student_id,
-        )
+    return await service_get_student_by_id(
+        session=session,
+        student_id=student_id,
     )
+
 
 @router.get(
     "/{student_id}/courses",
     response_model=list[CourseResponseDTO],
     status_code=200,
-    summary="Get the courses the student is enrolled in"
+    summary="Get the courses the student is enrolled in",
 )
 async def get_courses_by_student(
     session: SessionDep,
     student_id: int,
 ):
 
-    return (
-        await service_get_courses_by_student(
-            session=session,
-            student_id=student_id,
-        )
+    return await service_get_courses_by_student(
+        session=session,
+        student_id=student_id,
     )
+
 
 @router.post(
     "/",
@@ -87,12 +85,11 @@ async def add_student(
     student: StudentAddDTO,
 ):
 
-    return (
-        await service_insert_student(
-            session=session,
-            values=student.model_dump(),
-        )
+    return await service_insert_student(
+        session=session,
+        values=student.model_dump(),
     )
+
 
 @router.patch(
     "/{student_id}",
@@ -107,13 +104,12 @@ async def update_student(
 
     values = student.model_dump(exclude_unset=True)
 
-    return (
-        await service_update_student(
-            session=session,
-            student_id=student_id,
-            values=values,
-        )
+    return await service_update_student(
+        session=session,
+        student_id=student_id,
+        values=values,
     )
+
 
 @router.delete(
     "/{student_id}",
@@ -125,10 +121,7 @@ async def delete_student(
     student_id: int,
 ):
 
-    return (
-        await service_delete_student(
-            session=session,
-            student_id=student_id,
-        )
+    return await service_delete_student(
+        session=session,
+        student_id=student_id,
     )
-

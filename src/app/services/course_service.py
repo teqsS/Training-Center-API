@@ -19,6 +19,7 @@ async def service_get_courses(
 
     return courses
 
+
 async def service_get_course_by_id(
     session: AsyncSession,
     course_id: int,
@@ -31,6 +32,7 @@ async def service_get_course_by_id(
 
     return course
 
+
 async def service_get_courses_by_student(
     session: AsyncSession,
     student_id: int,
@@ -42,6 +44,7 @@ async def service_get_courses_by_student(
     )
 
     return courses
+
 
 async def service_insert_course(
     session: AsyncSession,
@@ -56,6 +59,7 @@ async def service_insert_course(
     await session.commit()
 
     return course
+
 
 async def service_update_course(
     session: AsyncSession,
@@ -73,20 +77,16 @@ async def service_update_course(
 
     return course
 
+
 async def service_cancel_course(
     session: AsyncSession,
     course_id: int,
 ):
 
     result = await update_course(
-        session=session,
-        course_id=course_id,
-        values={"is_active": False}
+        session=session, course_id=course_id, values={"is_active": False}
     )
 
     await session.commit()
-        
+
     return result
-
-
-

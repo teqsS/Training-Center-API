@@ -10,6 +10,7 @@ router = APIRouter(
     tags=["System"],
 )
 
+
 @router.get(
     "/",
     status_code=200,

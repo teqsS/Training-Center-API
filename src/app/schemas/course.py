@@ -14,14 +14,16 @@ class CourseAddDTO(BaseModel):
     level: CourseLevel = CourseLevel.beginner
     is_active: bool = True
 
+
 class CourseResponseDTO(CourseAddDTO):
     model_config = ConfigDict(extra="forbid")
 
     id: int
 
+
 class CourseChangeDTO(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    
+
     name: str | None = Field(default=None, min_length=3, max_length=100)
     teacher: str | None = Field(default=None, min_length=3, max_length=100)
     description: str | None = Field(default=None, min_length=10, max_length=1000)

@@ -14,7 +14,6 @@ from app.models.base import Base, intpk
 
 
 class CourseLevel(enum.Enum):
-
     beginner = "beginner"
     intermediate = "intermediate"
     advanced = "advanced"
@@ -26,7 +25,7 @@ class CoursesOrm(Base):
     id: Mapped[intpk]
     name: Mapped[str] = mapped_column(String(100))
     teacher: Mapped[str] = mapped_column(String(100))
-    description: Mapped[str] = mapped_column(String(1000)) 
+    description: Mapped[str] = mapped_column(String(1000))
     price: Mapped[int]
     capacity: Mapped[int]
     level: Mapped[CourseLevel]
@@ -61,5 +60,5 @@ class CoursesOrm(Base):
         CheckConstraint(
             "capacity >= 1 and capacity <= 500",
             name="check_capacity",
-        )
+        ),
     )
