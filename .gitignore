@@ -16,3 +16,4 @@ wheels/
 # Dev files
 .env
 test_files/
+.vscode/
