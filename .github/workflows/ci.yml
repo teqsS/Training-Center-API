@@ -11,8 +11,34 @@ on:
 jobs:
   quality-job:
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
+
+    env:
+      DB_USER: test_training_center_user
+      DB_PASS: test-only-password
+      DB_NAME: test_training_center_db
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+
+        env:
+          POSTGRES_USER: ${{ env.DB_USER }}
+          POSTGRES_PASSWORD: ${{ env.DB_PASS }}
+          POSTGRES_DB: ${{ env.DB_NAME }}
+
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd "pg_isready -U test_training_center_user -d test_training_center_db"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout
@@ -31,6 +57,12 @@ jobs:
 
       - name: Sync locked dependencies
         run: uv sync --locked --dev
+
+      - name: Upgrade migrations
+        run: uv run alembic upgrade head
+
+      - name: Check migrations
+        run: uv run alembic check
 
       - name: Lint
         run: uv run ruff check .
