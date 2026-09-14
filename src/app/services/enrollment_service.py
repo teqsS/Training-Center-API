@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.exceptions import EnrollmentNotFoundError
 from app.repositories.enrollment_repository import (
     insert_enrollment,
     update_enrollment,
@@ -32,6 +33,9 @@ async def service_complete_enrollment(
         values={"status": "completed"},
     )
 
+    if enrollment is None:
+        raise EnrollmentNotFoundError(enrollment_id)
+
     await session.commit()
 
     return enrollment
@@ -47,6 +51,9 @@ async def service_cancel_enrollment(
         enrollment_id=enrollment_id,
         values={"status": "cancelled"},
     )
+
+    if enrollment is None:
+        raise EnrollmentNotFoundError(enrollment_id)
 
     await session.commit()
 

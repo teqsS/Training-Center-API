@@ -4,6 +4,7 @@ from app.dependencies.database import SessionDep
 from app.schemas.course import (
     CourseResponseDTO,
 )
+from app.schemas.error import ErrorResponseDTO
 from app.schemas.student import (
     StudentAddDTO,
     StudentResponseDTO,
@@ -44,6 +45,7 @@ async def get_students(
 @router.get(
     "/{student_id}",
     response_model=StudentResponseDTO,
+    responses={404: {"model": ErrorResponseDTO}},
     status_code=200,
     summary="Get the student by ID",
 )
@@ -77,6 +79,8 @@ async def get_courses_by_student(
 
 @router.post(
     "/",
+    response_model=StudentResponseDTO,
+    responses={409: {"model": ErrorResponseDTO}},
     status_code=201,
     summary="Add student",
 )
@@ -93,6 +97,11 @@ async def add_student(
 
 @router.patch(
     "/{student_id}",
+    response_model=StudentResponseDTO,
+    responses={
+        404: {"model": ErrorResponseDTO},
+        409: {"model": ErrorResponseDTO},
+    },
     status_code=200,
     summary="Update student details",
 )
@@ -113,6 +122,8 @@ async def update_student(
 
 @router.delete(
     "/{student_id}",
+    response_model=StudentResponseDTO,
+    responses={404: {"model": ErrorResponseDTO}},
     status_code=200,
     summary="Delete student",
 )

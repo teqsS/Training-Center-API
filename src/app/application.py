@@ -5,6 +5,7 @@ from fastapi import FastAPI
 
 from app.config import Settings
 from app.database import create_engine, create_session_factory
+from app.exception_handlers import register_exception_handlers
 from app.routers import (
     courses_router,
     enrollments_router,
@@ -35,6 +36,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         title="training_center_api",
         version="0.1.0",
     )
+
+    register_exception_handlers(app)
 
     app.include_router(system_router, prefix="/training_center_api")
     app.include_router(courses_router, prefix="/training_center_api")

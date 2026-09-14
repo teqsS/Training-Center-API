@@ -3,7 +3,9 @@ from fastapi import APIRouter
 from app.dependencies.database import SessionDep
 from app.schemas.enrollment import (
     EnrollmentAddDTO,
+    EnrollmentResponseDTO,
 )
+from app.schemas.error import ErrorResponseDTO
 from app.services.enrollment_service import (
     service_cancel_enrollment,
     service_complete_enrollment,
@@ -18,7 +20,8 @@ router = APIRouter(
 
 @router.post(
     "/",
-    status_code=200,
+    response_model=EnrollmentResponseDTO,
+    status_code=201,
     summary="Make enrollment",
 )
 async def make_enrollment(session: SessionDep, enrollment: EnrollmentAddDTO):
@@ -31,6 +34,8 @@ async def make_enrollment(session: SessionDep, enrollment: EnrollmentAddDTO):
 
 @router.patch(
     "/{enrollment_id}/complete",
+    response_model=EnrollmentResponseDTO,
+    responses={404: {"model": ErrorResponseDTO}},
     status_code=200,
     summary="Complete the course",
 )
@@ -47,6 +52,8 @@ async def complete_enrollement(
 
 @router.delete(
     "/{enrollment_id}",
+    response_model=EnrollmentResponseDTO,
+    responses={404: {"model": ErrorResponseDTO}},
     status_code=200,
     summary="Cancel the course",
 )

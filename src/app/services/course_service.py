@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.exceptions import CourseNotFoundError
 from app.repositories.course_repository import (
     insert_course,
     select_course_by_id,
@@ -29,6 +30,9 @@ async def service_get_course_by_id(
         session=session,
         course_id=course_id,
     )
+
+    if course is None:
+        raise CourseNotFoundError(course_id)
 
     return course
 
@@ -73,6 +77,9 @@ async def service_update_course(
         values=values,
     )
 
+    if course is None:
+        raise CourseNotFoundError(course_id)
+
     await session.commit()
 
     return course
@@ -86,6 +93,9 @@ async def service_cancel_course(
     result = await update_course(
         session=session, course_id=course_id, values={"is_active": False}
     )
+
+    if result is None:
+        raise CourseNotFoundError(course_id)
 
     await session.commit()
 

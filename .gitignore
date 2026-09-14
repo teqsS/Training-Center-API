@@ -15,5 +15,7 @@ wheels/
 
 # Dev files
 .env
+.env.test
 test_files/
 .vscode/
+export_db_env.sh

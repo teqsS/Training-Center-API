@@ -6,6 +6,7 @@ from app.schemas.course import (
     CourseChangeDTO,
     CourseResponseDTO,
 )
+from app.schemas.error import ErrorResponseDTO
 from app.schemas.student import (
     StudentResponseDTO,
 )
@@ -42,6 +43,7 @@ async def get_courses(
 @router.get(
     "/{course_id}",
     response_model=CourseResponseDTO,
+    responses={404: {"model": ErrorResponseDTO}},
     status_code=200,
     summary="Get the course by ID",
 )
@@ -92,6 +94,8 @@ async def add_course(
 
 @router.patch(
     "/{course_id}",
+    response_model=CourseResponseDTO,
+    responses={404: {"model": ErrorResponseDTO}},
     status_code=200,
     summary="Update course details",
 )
@@ -112,6 +116,8 @@ async def update_course(
 
 @router.delete(
     "/{course_id}",
+    response_model=CourseResponseDTO,
+    responses={404: {"model": ErrorResponseDTO}},
     status_code=200,
     summary="Delete course",
 )
