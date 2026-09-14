@@ -44,3 +44,64 @@ def test_openapi_includes_expected_paths(app: FastAPI) -> None:
     }
 
     assert expected_paths.issubset(actual_paths)
+    assert (
+        "201"
+        in schema["paths"]["/training_center_api/enrollments/"]["post"]["responses"]
+    )
+    assert (
+        "404"
+        in schema["paths"]["/training_center_api/courses/{course_id}"]["get"][
+            "responses"
+        ]
+    )
+    assert (
+        "404"
+        in schema["paths"]["/training_center_api/courses/{course_id}"]["patch"][
+            "responses"
+        ]
+    )
+    assert (
+        "404"
+        in schema["paths"]["/training_center_api/courses/{course_id}"]["delete"][
+            "responses"
+        ]
+    )
+    assert (
+        "409" in schema["paths"]["/training_center_api/students/"]["post"]["responses"]
+    )
+    assert (
+        "404"
+        in schema["paths"]["/training_center_api/students/{student_id}"]["get"][
+            "responses"
+        ]
+    )
+    assert {"404", "409"}.issubset(
+        schema["paths"]["/training_center_api/students/{student_id}"]["patch"][
+            "responses"
+        ]
+    )
+    assert (
+        "404"
+        in schema["paths"]["/training_center_api/students/{student_id}"]["delete"][
+            "responses"
+        ]
+    )
+    assert (
+        "404"
+        in schema["paths"]["/training_center_api/enrollments/{enrollment_id}"][
+            "delete"
+        ]["responses"]
+    )
+    assert (
+        "404"
+        in schema["paths"]["/training_center_api/enrollments/{enrollment_id}/complete"][
+            "patch"
+        ]["responses"]
+    )
+
+    assert (
+        "#/components/schemas/ErrorResponseDTO"
+        == schema["paths"]["/training_center_api/courses/{course_id}"]["get"][
+            "responses"
+        ]["404"]["content"]["application/json"]["schema"]["$ref"]
+    )
