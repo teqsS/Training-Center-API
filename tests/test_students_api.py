@@ -20,7 +20,6 @@ def test_post_repeated_email(database_client: TestClient) -> None:
         "email": "brian@mail.com",
         "age": 18,
         "skills": ["python", "rust", "docker", "git", "postgresql"],
-        "is_active": True,
     }
 
     response_1 = database_client.post(
@@ -35,7 +34,6 @@ def test_post_repeated_email(database_client: TestClient) -> None:
         "email": "brian@mail.com",
         "age": 20,
         "skills": ["go", "redis", "docker", "git", "postgresql", "kubernetes"],
-        "is_active": True,
     }
 
     response_2 = database_client.post(
@@ -59,7 +57,6 @@ def test_post_and_get_student(database_client: TestClient) -> None:
             "email": "brian@mail.com",
             "age": 18,
             "skills": ["python", "rust", "docker", "git", "postgresql"],
-            "is_active": True,
         },
     )
 
@@ -91,7 +88,6 @@ def test_patch_missing_student(database_client: TestClient) -> None:
         "email": "Jamo@mail.com",
         "age": 21,
         "skills": ["c", "rust", "git"],
-        "is_active": True,
     }
 
     response = database_client.patch(
@@ -122,7 +118,6 @@ def test_patch_repeated_student_email(database_client: TestClient) -> None:
         "email": "brian@mail.com",
         "age": 18,
         "skills": ["python", "rust", "docker", "git", "postgresql"],
-        "is_active": True,
     }
 
     response_post_1 = database_client.post(
@@ -132,6 +127,7 @@ def test_patch_repeated_student_email(database_client: TestClient) -> None:
 
     json_1 = {
         "id": response_post_1.json()["id"],
+        "is_active": True,
         **json_1,
     }
 
@@ -143,7 +139,6 @@ def test_patch_repeated_student_email(database_client: TestClient) -> None:
         "email": "Jahmyr@mail.com",
         "age": 20,
         "skills": ["go", "redis", "docker", "git", "postgresql", "kubernetes"],
-        "is_active": True,
     }
 
     response_post_2 = database_client.post(
@@ -153,6 +148,7 @@ def test_patch_repeated_student_email(database_client: TestClient) -> None:
 
     json_2 = {
         "id": response_post_2.json()["id"],
+        "is_active": True,
         **json_2,
     }
 
@@ -173,3 +169,21 @@ def test_patch_repeated_student_email(database_client: TestClient) -> None:
         response_patch.json()["detail"]
         == f"Student with email {json_3['email']} already exists"
     )
+
+
+def test_post_rejects_system_fields(database_client: TestClient) -> None:
+
+    student = {
+        "full_name": "Jahmyr",
+        "email": "Jahmyr@mail.com",
+        "age": 20,
+        "skills": ["go", "redis", "docker", "git", "postgresql", "kubernetes"],
+        "is_active": True,
+    }
+
+    response = database_client.post(
+        "/training_center_api/students/",
+        json=student,
+    )
+
+    assert response.status_code == 422
