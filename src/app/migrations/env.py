@@ -64,6 +64,7 @@ def do_run_migrations(connection):
     context.configure(
         connection=connection,
         target_metadata=target_metadata,
+        compare_server_default=True,
     )
 
     with context.begin_transaction():

@@ -10,12 +10,12 @@ class EnrollmentAddDTO(BaseModel):
 
     student_id: int
     course_id: int
-    status: Status = Status.active
 
 
 class EnrollmentResponseDTO(EnrollmentAddDTO):
     model_config = ConfigDict(extra="forbid")
 
     id: int
+    status: Status
     created_at: datetime
     updated_at: datetime

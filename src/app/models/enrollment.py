@@ -27,7 +27,9 @@ class EnrollmentsOrm(Base):
         ForeignKey("students.id", ondelete="CASCADE")
     )
     course_id: Mapped[int] = mapped_column(ForeignKey("courses.id", ondelete="CASCADE"))
-    status: Mapped[Status]
+    status: Mapped[Status] = mapped_column(
+        default=Status.active, server_default="active"
+    )
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 

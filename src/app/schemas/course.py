@@ -12,13 +12,13 @@ class CourseAddDTO(BaseModel):
     price: int = Field(ge=0)
     capacity: int = Field(default=100, ge=1, le=500)
     level: CourseLevel = CourseLevel.beginner
-    is_active: bool = True
 
 
 class CourseResponseDTO(CourseAddDTO):
     model_config = ConfigDict(extra="forbid")
 
     id: int
+    is_active: bool
 
 
 class CourseChangeDTO(BaseModel):
@@ -30,4 +30,3 @@ class CourseChangeDTO(BaseModel):
     price: int | None = Field(default=None, ge=0)
     capacity: int | None = Field(default=None, ge=1, le=500)
     level: CourseLevel | None = None
-    is_active: bool | None = None

@@ -22,7 +22,6 @@ def test_post_and_get_course(database_client: TestClient) -> None:
             "price": 20000,
             "capacity": 30,
             "level": "intermediate",
-            "is_active": True,
         },
     )
 
@@ -48,6 +47,50 @@ def test_post_and_get_course(database_client: TestClient) -> None:
     assert response_get.json() == created_course
 
 
+def test_post_only_necessary_data(database_client: TestClient) -> None:
+
+    course = {
+        "name": "Go Backend",
+        "teacher": "Jaire Alexander",
+        "price": 20000,
+    }
+
+    response = database_client.post(
+        "/training_center_api/courses/",
+        json=course,
+    )
+
+    default_data = {
+        "description": None,
+        "capacity": 100,
+        "level": "beginner",
+        "is_active": True,
+    }
+
+    assert response.status_code == 201
+    assert response.json()["description"] == default_data["description"]
+    assert response.json()["capacity"] == default_data["capacity"]
+    assert response.json()["level"] == default_data["level"]
+    assert response.json()["is_active"] == default_data["is_active"]
+
+
+def test_post_rejects_system_fields(database_client: TestClient) -> None:
+
+    course = {
+        "name": "Go Backend",
+        "teacher": "Jaire Alexander",
+        "price": 20000,
+        "is_active": True,
+    }
+
+    response = database_client.post(
+        "/training_center_api/courses/",
+        json=course,
+    )
+
+    assert response.status_code == 422
+
+
 def test_patch_missing_course(database_client: TestClient) -> None:
 
     course_id = 999999
@@ -58,7 +101,6 @@ def test_patch_missing_course(database_client: TestClient) -> None:
         "price": 20000,
         "capacity": 30,
         "level": "intermediate",
-        "is_active": True,
     }
 
     response = database_client.patch(

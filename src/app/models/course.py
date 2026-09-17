@@ -3,7 +3,7 @@ from __future__ import annotations
 import enum
 from typing import TYPE_CHECKING
 
-from sqlalchemy import CheckConstraint, String
+from sqlalchemy import CheckConstraint, String, true
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
@@ -25,11 +25,13 @@ class CoursesOrm(Base):
     id: Mapped[intpk]
     name: Mapped[str] = mapped_column(String(100))
     teacher: Mapped[str] = mapped_column(String(100))
-    description: Mapped[str] = mapped_column(String(1000))
+    description: Mapped[str | None] = mapped_column(String(1000))
     price: Mapped[int]
-    capacity: Mapped[int]
-    level: Mapped[CourseLevel]
-    is_active: Mapped[bool]
+    capacity: Mapped[int] = mapped_column(default=100, server_default="100")
+    level: Mapped[CourseLevel] = mapped_column(
+        default=CourseLevel.beginner, server_default="beginner"
+    )
+    is_active: Mapped[bool] = mapped_column(default=True, server_default=true())
 
     enrollments: Mapped[list[EnrollmentsOrm]] = relationship(
         back_populates="course",

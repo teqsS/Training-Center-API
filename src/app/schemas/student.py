@@ -10,13 +10,13 @@ class StudentAddDTO(BaseModel):
     email: EmailStr
     age: int = Field(ge=16, le=100)
     skills: list[StudentSkill] = Field(default_factory=list)
-    is_active: bool = Field(default=True)
 
 
 class StudentResponseDTO(StudentAddDTO):
     model_config = ConfigDict(extra="forbid")
 
     id: int
+    is_active: bool
 
 
 class StudentUpdateDTO(BaseModel):
@@ -26,4 +26,3 @@ class StudentUpdateDTO(BaseModel):
     email: EmailStr | None = None
     age: int | None = Field(default=None, ge=16, le=100)
     skills: list[StudentSkill] | None = None
-    is_active: bool | None = None
