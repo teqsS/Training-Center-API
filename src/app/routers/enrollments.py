@@ -21,6 +21,10 @@ router = APIRouter(
 @router.post(
     "/",
     response_model=EnrollmentResponseDTO,
+    responses={
+        409: {"model": ErrorResponseDTO},
+        404: {"model": ErrorResponseDTO},
+    },
     status_code=201,
     summary="Make enrollment",
 )

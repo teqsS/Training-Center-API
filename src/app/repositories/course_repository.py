@@ -56,6 +56,27 @@ async def select_courses_by_student(
     return result.scalars().all()
 
 
+async def select_and_block_active_course(
+    session: AsyncSession,
+    course_id: int,
+):
+
+    query = (
+        select(CoursesOrm)
+        .where(
+            and_(
+                CoursesOrm.is_active.is_(True),
+                CoursesOrm.id == course_id,
+            )
+        )
+        .with_for_update()
+    )
+
+    result = await session.execute(query)
+
+    return result.scalar_one_or_none()
+
+
 async def insert_course(
     session: AsyncSession,
     values: dict[str, object],

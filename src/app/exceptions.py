@@ -32,3 +32,18 @@ class StudentEmailAlreadyExistsError(ConflictError):
     def __init__(self, student_email: str) -> None:
         self.email = student_email
         super().__init__(f"Student with email {student_email} already exists")
+
+
+class ActiveEnrollmentAlreadyExistsError(ConflictError):
+    def __init__(self, student_id: int, course_id: int) -> None:
+        self.student_id = student_id
+        self.course_id = course_id
+        super().__init__(
+            f"Active enrollment with course id {course_id} and student id {student_id} already exists"
+        )
+
+
+class CourseCapacityReachedError(ConflictError):
+    def __init__(self, course_id: int) -> None:
+        self.course_id = course_id
+        super().__init__(f"Course with id {course_id} has reached its capacity")
