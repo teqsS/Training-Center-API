@@ -39,7 +39,10 @@ async def make_enrollment(session: SessionDep, enrollment: EnrollmentAddDTO):
 @router.patch(
     "/{enrollment_id}/complete",
     response_model=EnrollmentResponseDTO,
-    responses={404: {"model": ErrorResponseDTO}},
+    responses={
+        404: {"model": ErrorResponseDTO},
+        409: {"model": ErrorResponseDTO},
+    },
     status_code=200,
     summary="Complete the course",
 )
@@ -57,7 +60,10 @@ async def complete_enrollement(
 @router.delete(
     "/{enrollment_id}",
     response_model=EnrollmentResponseDTO,
-    responses={404: {"model": ErrorResponseDTO}},
+    responses={
+        404: {"model": ErrorResponseDTO},
+        409: {"model": ErrorResponseDTO},
+    },
     status_code=200,
     summary="Cancel the course",
 )

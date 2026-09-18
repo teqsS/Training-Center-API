@@ -22,6 +22,22 @@ async def select_quantity_enrollments(
     return result.scalar_one()
 
 
+async def select_and_block_enrollment(
+    session: AsyncSession,
+    enrollment_id: int,
+):
+
+    query = (
+        select(EnrollmentsOrm)
+        .where(EnrollmentsOrm.id == enrollment_id)
+        .with_for_update()
+    )
+
+    result = await session.execute(query)
+
+    return result.scalar()
+
+
 async def insert_enrollment(
     session: AsyncSession,
     values: dict[str, int],

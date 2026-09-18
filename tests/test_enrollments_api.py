@@ -276,3 +276,147 @@ def test_enroll_max_capacity_course(database_client: TestClient) -> None:
         enroll_student2_response.json()["detail"]
         == f"Course with id {course['id']} has reached its capacity"
     )
+
+
+def test_complete_enrollment_and_reenroll(database_client: TestClient) -> None:
+
+    course = create_test_course(database_client)
+    student = create_test_student(database_client)
+
+    json_enrollment = {
+        "student_id": student["id"],
+        "course_id": course["id"],
+    }
+
+    response_post = database_client.post(
+        "/training_center_api/enrollments/",
+        json=json_enrollment,
+    )
+
+    assert response_post.status_code == 201
+    assert response_post.json()["id"] == 1
+    assert response_post.json()["status"] == "active"
+
+    response_patch = database_client.patch(
+        f"/training_center_api/enrollments/{response_post.json()['id']}/complete",
+    )
+
+    assert response_patch.status_code == 200
+    assert response_patch.json()["status"] == "completed"
+
+    response_post = database_client.post(
+        "/training_center_api/enrollments/",
+        json=json_enrollment,
+    )
+
+    assert response_post.status_code == 201
+    assert response_post.json()["id"] == 2
+    assert response_post.json()["status"] == "active"
+
+
+def test_cancel_enrollment_and_reenroll(database_client: TestClient) -> None:
+
+    course = create_test_course(database_client)
+    student = create_test_student(database_client)
+
+    json_enrollment = {
+        "student_id": student["id"],
+        "course_id": course["id"],
+    }
+
+    response_post = database_client.post(
+        "/training_center_api/enrollments/",
+        json=json_enrollment,
+    )
+
+    assert response_post.status_code == 201
+    assert response_post.json()["id"] == 1
+    assert response_post.json()["status"] == "active"
+
+    response_delete = database_client.delete(
+        f"/training_center_api/enrollments/{response_post.json()['id']}",
+    )
+
+    assert response_delete.status_code == 200
+    assert response_delete.json()["status"] == "cancelled"
+
+    response_post = database_client.post(
+        "/training_center_api/enrollments/",
+        json=json_enrollment,
+    )
+
+    assert response_post.status_code == 201
+    assert response_post.json()["id"] == 2
+    assert response_post.json()["status"] == "active"
+
+
+def test_cancel_completed_enrollment(database_client: TestClient) -> None:
+
+    course = create_test_course(database_client)
+    student = create_test_student(database_client)
+
+    json_enrollment = {
+        "student_id": student["id"],
+        "course_id": course["id"],
+    }
+
+    response_post = database_client.post(
+        "/training_center_api/enrollments/",
+        json=json_enrollment,
+    )
+
+    assert response_post.status_code == 201
+    assert response_post.json()["id"] == 1
+    assert response_post.json()["status"] == "active"
+
+    response_patch = database_client.patch(
+        f"/training_center_api/enrollments/{response_post.json()['id']}/complete",
+    )
+
+    assert response_patch.status_code == 200
+    assert response_patch.json()["status"] == "completed"
+
+    response_delete = database_client.delete(
+        f"/training_center_api/enrollments/{response_post.json()['id']}",
+    )
+
+    assert response_delete.status_code == 409
+    assert response_delete.json()["detail"] == (
+        f"Enrollment with id {response_post.json()['id']} cannot transition from completed to cancelled"
+    )
+
+
+def test_complete_cancelled_enrollment(database_client: TestClient) -> None:
+
+    course = create_test_course(database_client)
+    student = create_test_student(database_client)
+
+    json_enrollment = {
+        "student_id": student["id"],
+        "course_id": course["id"],
+    }
+
+    response_post = database_client.post(
+        "/training_center_api/enrollments/",
+        json=json_enrollment,
+    )
+
+    assert response_post.status_code == 201
+    assert response_post.json()["id"] == 1
+    assert response_post.json()["status"] == "active"
+
+    response_delete = database_client.delete(
+        f"/training_center_api/enrollments/{response_post.json()['id']}",
+    )
+
+    assert response_delete.status_code == 200
+    assert response_delete.json()["status"] == "cancelled"
+
+    response_patch = database_client.patch(
+        f"/training_center_api/enrollments/{response_post.json()['id']}/complete",
+    )
+
+    assert response_patch.status_code == 409
+    assert response_patch.json()["detail"] == (
+        f"Enrollment with id {response_post.json()['id']} cannot transition from cancelled to completed"
+    )

@@ -1,3 +1,6 @@
+from app.models.enrollment import Status
+
+
 class TrainingCenterError(Exception):
     pass
 
@@ -47,3 +50,15 @@ class CourseCapacityReachedError(ConflictError):
     def __init__(self, course_id: int) -> None:
         self.course_id = course_id
         super().__init__(f"Course with id {course_id} has reached its capacity")
+
+
+class InvalidEnrollmentStatusTransitionError(ConflictError):
+    def __init__(
+        self, enrollment_id: int, existed_status: Status, status: Status
+    ) -> None:
+        self.enrollment_id = enrollment_id
+        self.existed_status = existed_status
+        self.status = status
+        super().__init__(
+            f"Enrollment with id {enrollment_id} cannot transition from {existed_status.value} to {status.value}"
+        )

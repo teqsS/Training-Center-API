@@ -6,13 +6,16 @@ from app.exceptions import (
     CourseCapacityReachedError,
     CourseNotFoundError,
     EnrollmentNotFoundError,
+    InvalidEnrollmentStatusTransitionError,
     StudentNotFoundError,
 )
+from app.models.enrollment import Status
 from app.repositories.course_repository import (
     select_and_block_active_course,
 )
 from app.repositories.enrollment_repository import (
     insert_enrollment,
+    select_and_block_enrollment,
     select_quantity_enrollments,
     update_enrollment,
 )
@@ -73,21 +76,48 @@ async def service_make_enrollment(
     return enrollment
 
 
-async def service_complete_enrollment(
+async def _transition_enrollment(
     session: AsyncSession,
     enrollment_id: int,
+    target_status: Status,
 ):
 
-    enrollment = await update_enrollment(
+    enrollment = await select_and_block_enrollment(
         session=session,
         enrollment_id=enrollment_id,
-        values={"status": "completed"},
     )
 
     if enrollment is None:
         raise EnrollmentNotFoundError(enrollment_id)
 
+    if enrollment.status != Status.active:
+        raise InvalidEnrollmentStatusTransitionError(
+            enrollment_id=enrollment_id,
+            existed_status=enrollment.status,
+            status=target_status,
+        )
+
+    enrollment = await update_enrollment(
+        session=session,
+        enrollment_id=enrollment_id,
+        values={"status": target_status.value},
+    )
+
     await session.commit()
+
+    return enrollment
+
+
+async def service_complete_enrollment(
+    session: AsyncSession,
+    enrollment_id: int,
+):
+
+    enrollment = await _transition_enrollment(
+        session=session,
+        enrollment_id=enrollment_id,
+        target_status=Status.completed,
+    )
 
     return enrollment
 
@@ -97,15 +127,10 @@ async def service_cancel_enrollment(
     enrollment_id: int,
 ):
 
-    enrollment = await update_enrollment(
+    enrollment = await _transition_enrollment(
         session=session,
         enrollment_id=enrollment_id,
-        values={"status": "cancelled"},
+        target_status=Status.cancelled,
     )
-
-    if enrollment is None:
-        raise EnrollmentNotFoundError(enrollment_id)
-
-    await session.commit()
 
     return enrollment
